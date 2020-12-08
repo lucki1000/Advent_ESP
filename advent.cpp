@@ -185,24 +185,24 @@ void loop() {
     Serial.println(second_advent_doy);
     Serial.println("1th Advent DOY: ");
     Serial.println(first_advent_doy);
-    delay(10000);
-/*    int first_adv = 1;
-    int second_adv = 8;
-    int three_adv = 15;
-    int last_adv = 22;
-    if (monat == 12) {
-        if (tag >= first_adv){
-            digitalWrite(led_first_adv, HIGH);
+    int actual_doy = doy_calc(jahr, monat, tag);
+    if (silent == "Sunday") {
+        if (actual_doy >= first_advent_doy) {
+            //some pice of code
         }
-        if (tag >= second_adv){
-            digitalWrite(led_twice_adv, HIGH);
+        if (actual_doy >= second_advent_doy) {
+            //some pice code
         }
-        if (tag >= three_adv){
-            digitalWrite(led_three_adv, HIGH);
+        if (actual_doy >= three_advent_doy) {
+            //some pice code
         }
-        if (tag >= last_adv){
-            digitalWrite(led_fourth_adv, HIGH);
-        }*/
+        if (actual_doy >= fourth_advent_doy) {
+            //some pice code
+        } else {
+            //some pice code
+        }
+    }
+    delay(40000);
     void printDigits(int digits);
     void sendNTPpacket(IPAddress &address);
     //Setup
