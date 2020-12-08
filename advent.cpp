@@ -17,7 +17,7 @@ const int timeZone = 1; //Central European Time
 const int first_led = 16;
 const int second_led = 5;
 const int third_led = 4;
-const int foruth_led = 0;
+const int fourth_led = 0;
 
 WiFiUDP Udp;
 unsigned int localPort = 8888;
@@ -34,7 +34,7 @@ void setup() {
     pinMode(first_led, OUTPUT); // set port to on
     pinMode(second_led, OUTPUT);
     pinMode(third_led, OUTPUT);
-    pinMode(foruth_led, OUTPUT);
+    pinMode(fourth_led, OUTPUT);
     digitalWrite(first_led, LOW); // Turn off light
     digitalWrite(second_led, LOW);
     digitalWrite(third_led, LOW);
@@ -206,15 +206,15 @@ void loop() {
             digitalWrite(second_led, HIGH);
         }
         if (actual_doy >= three_advent_doy) {
-            digitalWrite(thrid_led, HIGH);
+            digitalWrite(third_led, HIGH);
         }
         if (actual_doy >= fourth_advent_doy) {
-            digitalWrite(foruth_led, HIGH);
+            digitalWrite(fourth_led, HIGH);
         } else {
             digitalWrite(first_led, LOW);
             digitalWrite(second_led, LOW);
-            digitalWrite(thrid_led, LOW);
-            digitalWrite(foruth_led, LOW);             
+            digitalWrite(third_led, LOW);
+            digitalWrite(fourth_led, LOW);             
         }
     }
     delay(40000);
