@@ -7,13 +7,17 @@
 
 using namespace std;
 //WiFi setup
-const char ssid[] = "ssid";
-const char pass[] = "wifi-key";
+const char ssid[] = "SSID";
+const char pass[] = "WLAN KEY";
 //NTP Server
 static const char ntpServerName[] = "time.google.de";
 //Set Timezone
 const int timeZone = 1; //Central European Time
 //Set UP lights on GPIOs
+const int first_led = 16;
+const int second_led = 5;
+const int third_led = 4;
+const int foruth_led = 0;
 
 WiFiUDP Udp;
 unsigned int localPort = 8888;
@@ -27,6 +31,14 @@ void sendNTPpacket(IPAddress &address);
 //Setup
 void setup() {
     Serial.begin(115200);
+    pinMode(first_led, OUTPUT); // set port to on
+    pinMode(second_led, OUTPUT);
+    pinMode(third_led, OUTPUT);
+    pinMode(foruth_led, OUTPUT);
+    digitalWrite(first_led, LOW); // Turn off light
+    digitalWrite(second_led, LOW);
+    digitalWrite(third_led, LOW);
+    digitalWrite(fourth_led, LOW);
     while (!Serial);
     delay(250);
     Serial.println("TimeNTP");
@@ -188,18 +200,21 @@ void loop() {
     int actual_doy = doy_calc(jahr, monat, tag);
     if (silent == "Sunday") {
         if (actual_doy >= first_advent_doy) {
-            //some pice of code
+            digitalWrite(first_led, HIGH);
         }
         if (actual_doy >= second_advent_doy) {
-            //some pice code
+            digitalWrite(second_led, HIGH);
         }
         if (actual_doy >= three_advent_doy) {
-            //some pice code
+            digitalWrite(thrid_led, HIGH);
         }
         if (actual_doy >= fourth_advent_doy) {
-            //some pice code
+            digitalWrite(foruth_led, HIGH);
         } else {
-            //some pice code
+            digitalWrite(first_led, LOW);
+            digitalWrite(second_led, LOW);
+            digitalWrite(thrid_led, LOW);
+            digitalWrite(foruth_led, LOW);             
         }
     }
     delay(40000);
