@@ -13,7 +13,7 @@
 
 ## What's this Project?<a name="whatsthis"></a>
 
-I've made this Project, because i'm to lazy to fire on one the right candle of my advent wreath every year.:wink:
+I've made this Project, because i'm to lazy to fire on the 4 candles of my advent wreath every year.:wink:
 
 The really reason is learned many things of ESP boards and the Arduino IDE also C++, and if you are good at handcrafting, you can make a nice LED Advent Wreath. I think you can use it on any board who can use this module: <ESP8266WiFi.h>.
 
