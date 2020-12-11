@@ -1,5 +1,7 @@
 # IOT LED Advent Wreath
 
+This program is a dynamic Advent Wreath it checks the Google Time Server for the actual day, month and year. With this inforamation it calcs all advent days in the actual year.  
+
 <p align="center">
   <span>English</span> |
   <a href="https://github.com/lucki1000/Advent_ESP/blob/main/lang/readme_de.md">German</a>
