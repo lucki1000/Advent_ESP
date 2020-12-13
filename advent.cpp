@@ -10,7 +10,7 @@ using namespace std;
 const char ssid[] = "SSID";
 const char pass[] = "WLAN KEY";
 //NTP Server
-static const char ntpServerName[] = "time.google.de";
+static const char ntpServerName[] = "time.google.com";
 //Set Timezone
 const int timeZone = 1; //Central European Time
 //Set UP lights on GPIOs
@@ -122,8 +122,6 @@ int doy_calc(int year, int mon, int day)
             doy += 31+days_in_feb+31+30+31+30+31+31+30+31+30;
             break;
     }
-    //Serial.println("DOY: ");
-    //Serial.println(doy);
 
     return doy; // return 0 to operating system
 }
@@ -187,7 +185,7 @@ void loop() {
     int monat = month();
     int jahr = year();
     int fourth_advent = calc_4th_advent(silent);
-    int fourth_advent_doy = doy_calc(jahr, 12, fourth_advent) + 1; //2020 it should be 355
+    int fourth_advent_doy = doy_calc(jahr, 12, fourth_advent); //2020 it should be 355
     int three_advent_doy = fourth_advent_doy - 7, second_advent_doy = three_advent_doy - 7, first_advent_doy = second_advent_doy - 7;
     Serial.println("4th Advent DOY: ");
     Serial.println(fourth_advent_doy);
@@ -197,80 +195,98 @@ void loop() {
     Serial.println(second_advent_doy);
     Serial.println("1th Advent DOY: ");
     Serial.println(first_advent_doy);
+    Serial.println("ADOY:");
     int actual_doy = doy_calc(jahr, monat, tag);
-    if (silent == "Sunday") {
-        if (actual_doy >= first_advent_doy) {
+    Serial.println(actual_doy);
+        if ((actual_doy >= first_advent_doy) && (actual_doy < second_advent_doy)) {
+            Serial.println("Nice1");
             digitalWrite(first_led, HIGH);
+            digitalWrite(second_led, LOW);
+            digitalWrite(third_led, LOW);
+            digitalWrite(fourth_led, LOW);
         }
-        if (actual_doy >= second_advent_doy) {
+        else if ((actual_doy >= second_advent_doy) && (actual_doy < three_advent_doy)) {
+            Serial.println("NICE2");
+            digitalWrite(first_led, HIGH);
             digitalWrite(second_led, HIGH);
+            digitalWrite(third_led, LOW);
+            digitalWrite(fourth_led, LOW);
         }
-        if (actual_doy >= three_advent_doy) {
+        else if ((actual_doy >= three_advent_doy) && (actual_doy < fourth_advent_doy)) {
+            Serial.println("NICE3");
+            digitalWrite(first_led, HIGH);
+            digitalWrite(second_led, HIGH);
             digitalWrite(third_led, HIGH);
+            digitalWrite(fourth_led, LOW);
         }
-        if (actual_doy >= fourth_advent_doy) {
+        else if (actual_doy >= fourth_advent_doy) {
+            Serial.println("NICE4");
+            digitalWrite(first_led, HIGH);
+            digitalWrite(second_led, HIGH);
+            digitalWrite(third_led, HIGH);
             digitalWrite(fourth_led, HIGH);
-        } else {
+        }
+        else {
+            Serial.println("else");
             digitalWrite(first_led, LOW);
             digitalWrite(second_led, LOW);
             digitalWrite(third_led, LOW);
-            digitalWrite(fourth_led, LOW);             
+            digitalWrite(fourth_led, LOW);
         }
-    }
     delay(40000);
     void printDigits(int digits);
     void sendNTPpacket(IPAddress &address);
     //Setup
 }
-    const int NTP_PACKET_SIZE = 48; // NTP time is in the first 48 bytes of message
-    byte packetBuffer[NTP_PACKET_SIZE]; //buffer to hold incoming & outgoing packets
+const int NTP_PACKET_SIZE = 48; // NTP time is in the first 48 bytes of message
+byte packetBuffer[NTP_PACKET_SIZE]; //buffer to hold incoming & outgoing packets
 
-    time_t getNtpTime() {
-        IPAddress ntpServerIP; // NTP server's ip address
+time_t getNtpTime() {
+    IPAddress ntpServerIP; // NTP server's ip address
 
-        while (Udp.parsePacket() > 0); // discard any previously received packets
-        Serial.println("Transmit NTP Request");
-        // get a random server from the pool
-        WiFi.hostByName(ntpServerName, ntpServerIP);
-        Serial.print(ntpServerName);
-        Serial.print(": ");
-        Serial.println(ntpServerIP);
-        sendNTPpacket(ntpServerIP);
-        uint32_t beginWait = millis();
-        while (millis() - beginWait < 1500) {
-            int size = Udp.parsePacket();
-            if (size >= NTP_PACKET_SIZE) {
-                Serial.println("Receive NTP Response");
-                Udp.read(packetBuffer, NTP_PACKET_SIZE);  // read packet into the buffer
-                unsigned long secsSince1900;
-                // convert four bytes starting at location 40 to a long integer
-                secsSince1900 = (unsigned long) packetBuffer[40] << 24;
-                secsSince1900 |= (unsigned long) packetBuffer[41] << 16;
-                secsSince1900 |= (unsigned long) packetBuffer[42] << 8;
-                secsSince1900 |= (unsigned long) packetBuffer[43];
-                return secsSince1900 - 2208988800UL + timeZone * SECS_PER_HOUR;
-            }
+    while (Udp.parsePacket() > 0); // discard any previously received packets
+    Serial.println("Transmit NTP Request");
+    // get a random server from the pool
+    WiFi.hostByName(ntpServerName, ntpServerIP);
+    Serial.print(ntpServerName);
+    Serial.print(": ");
+    Serial.println(ntpServerIP);
+    sendNTPpacket(ntpServerIP);
+    uint32_t beginWait = millis();
+    while (millis() - beginWait < 1500) {
+        int size = Udp.parsePacket();
+        if (size >= NTP_PACKET_SIZE) {
+            Serial.println("Receive NTP Response");
+            Udp.read(packetBuffer, NTP_PACKET_SIZE);  // read packet into the buffer
+            unsigned long secsSince1900;
+            // convert four bytes starting at location 40 to a long integer
+            secsSince1900 = (unsigned long) packetBuffer[40] << 24;
+            secsSince1900 |= (unsigned long) packetBuffer[41] << 16;
+            secsSince1900 |= (unsigned long) packetBuffer[42] << 8;
+            secsSince1900 |= (unsigned long) packetBuffer[43];
+            return secsSince1900 - 2208988800UL + timeZone * SECS_PER_HOUR;
         }
-        Serial.println("No NTP Response :-(");
-        return 0; // return 0 if unable to get the time
     }
-    void sendNTPpacket(IPAddress &address) {
-        // set all bytes in the buffer to 0
-        memset(packetBuffer, 0, NTP_PACKET_SIZE);
-        // Initialize values needed to form NTP request
-        // (see URL above for details on the packets)
-        packetBuffer[0] = 0b11100011;   // LI, Version, Mode
-        packetBuffer[1] = 0;     // Stratum, or type of clock
-        packetBuffer[2] = 6;     // Polling Interval
-        packetBuffer[3] = 0xEC;  // Peer Clock Precision
-        // 8 bytes of zero for Root Delay & Root Dispersion
-        packetBuffer[12] = 49;
-        packetBuffer[13] = 0x4E;
-        packetBuffer[14] = 49;
-        packetBuffer[15] = 52;
-        // all NTP fields have been given values, now
-        // you can send a packet requesting a timestamp:
-        Udp.beginPacket(address, 123); //NTP requests are to port 123
-        Udp.write(packetBuffer, NTP_PACKET_SIZE);
-        Udp.endPacket();
-    }
+    Serial.println("No NTP Response :-(");
+    return 0; // return 0 if unable to get the time
+}
+void sendNTPpacket(IPAddress &address) {
+    // set all bytes in the buffer to 0
+    memset(packetBuffer, 0, NTP_PACKET_SIZE);
+    // Initialize values needed to form NTP request
+    // (see URL above for details on the packets)
+    packetBuffer[0] = 0b11100011;   // LI, Version, Mode
+    packetBuffer[1] = 0;     // Stratum, or type of clock
+    packetBuffer[2] = 6;     // Polling Interval
+    packetBuffer[3] = 0xEC;  // Peer Clock Precision
+    // 8 bytes of zero for Root Delay & Root Dispersion
+    packetBuffer[12] = 49;
+    packetBuffer[13] = 0x4E;
+    packetBuffer[14] = 49;
+    packetBuffer[15] = 52;
+    // all NTP fields have been given values, now
+    // you can send a packet requesting a timestamp:
+    Udp.beginPacket(address, 123); //NTP requests are to port 123
+    Udp.write(packetBuffer, NTP_PACKET_SIZE);
+    Udp.endPacket();
+}
