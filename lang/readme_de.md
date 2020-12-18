@@ -15,7 +15,8 @@
 
 Warum machte ich dieses Projekt? Weil ich wohl zu Faul bin um jedes Jahr einzeln 4 Kerzen zum richtigen Zeitpunkt anzumachen.:wink:
 
-Spaß beiseite, ich habe erfahrungen mit der Arduino IDE, ESP Board und mit C++ gesammelt. Wenn du gut im Basteln bist, kannst du einen schönen Adventskranz machen.  
+Spaß beiseite, ich habe erfahrungen mit der Arduino IDE, dem ESP Board und mit C++ gesammelt. Wenn du gut im Basteln bist, kannst du einen schönen Adventskranz machen.
+
 Ich denke du kannst diesen Code auf jedem ESP/Arduino benutzen mit dem du dieses Modul benutzen kannst <ESP8266WiFi.h>.
 
 ## Wie benutze ich das?<a name="howtouseit"></a>
@@ -30,7 +31,7 @@ Was du aufjeden fall ändern musst ist:
 const char ssid[] = "SSID";
 const char pass[] = "WLAN KEY";
 ```
-Wenn du das nicht machst sucht das Programm nach dem WLan und zeigt dir für jeden Schleifen Durchlauf einen "." mehr im seriellen Monitor, und wird das Programm nicht fortsetzen bis das WLan gefunden wird.  
+Wenn du das nicht machst sucht das Programm nach dem WLan SSID und zeigt dir für jeden Schleifen Durchlauf einen "." mehr im seriellen Monitor, das wird dass Programm solange weitermachen bis er das WLan SSID gefunden und sich erfolgreich authentifiziert hat.
 
 Wenn du den NTP Server ändern willst odere die Zeitzone, dann ändere das dort:
 ```
