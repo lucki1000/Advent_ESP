@@ -7,7 +7,7 @@
 
 using namespace std;
 const char ssid[] = "SSID";
-const char pass[] = "WLAN KEY";
+const char pass[] = "WLAN-KEY";
 static const char ntpServerName[] = "time.google.com";
 const int timeZone = 1; 
 const int first_led = 16;
@@ -173,6 +173,7 @@ void loop() {
     int fourth_advent_doy = doy_calc(jahr, 12, fourth_advent); 
     int three_advent_doy = fourth_advent_doy - 7, second_advent_doy = three_advent_doy - 7, first_advent_doy = second_advent_doy - 7;
     int actual_doy = doy_calc(jahr, monat, tag);
+    int silent_night_doy = doy_calc(jahr, 12, 24);
         if ((actual_doy >= first_advent_doy) && (actual_doy < second_advent_doy)) {
             digitalWrite(first_led, HIGH);
             digitalWrite(second_led, LOW);
@@ -191,7 +192,7 @@ void loop() {
             digitalWrite(third_led, HIGH);
             digitalWrite(fourth_led, LOW);
         }
-        else if (actual_doy >= fourth_advent_doy) {
+        else if ((actual_doy >= fourth_advent_doy) && (actual_doy <= silent_night_doy)) {
             digitalWrite(first_led, HIGH);
             digitalWrite(second_led, HIGH);
             digitalWrite(third_led, HIGH);

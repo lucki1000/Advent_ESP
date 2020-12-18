@@ -8,7 +8,7 @@
 using namespace std;
 //WiFi setup
 const char ssid[] = "SSID";
-const char pass[] = "WLAN KEY";
+const char pass[] = "WLAN-KEY";
 //NTP Server
 static const char ntpServerName[] = "time.google.com";
 //Set Timezone
@@ -197,7 +197,11 @@ void loop() {
     Serial.println(first_advent_doy);
     Serial.println("Actual DOY:");
     int actual_doy = doy_calc(jahr, monat, tag);
+    int silent_night_doy = doy_calc(jahr, 12, 24);
+    Serial.println("Actual DOY:");
     Serial.println(actual_doy);
+    Serial.println("Silent night DOY");
+    Serial.println(silent_night_doy);
         if ((actual_doy >= first_advent_doy) && (actual_doy < second_advent_doy)) {
             Serial.println("First Case");
             digitalWrite(first_led, HIGH);
@@ -219,7 +223,7 @@ void loop() {
             digitalWrite(third_led, HIGH);
             digitalWrite(fourth_led, LOW);
         }
-        else if (actual_doy >= fourth_advent_doy) {
+        else if ((actual_doy >= fourth_advent_doy) && (actual_doy <= silent_night_doy)) {
             Serial.println("Fourth Case");
             digitalWrite(first_led, HIGH);
             digitalWrite(second_led, HIGH);
