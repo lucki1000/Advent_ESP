@@ -13,7 +13,7 @@ This program is a dynamic Advent Wreath it checks the Google Time Server for the
   - [What you need to change](#changes)
   - [Compiling and Flash to ESP](#compileandflash)
 
-## What's this Project?<a name="whatsthis"></a>
+## What is this Project for?<a name="whatsthis"></a>
 
 I've made this Project, because i'm to lazy to fire on the 4 candles of my advent wreath every year.:wink:
 
