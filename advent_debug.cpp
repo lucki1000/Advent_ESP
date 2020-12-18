@@ -14,10 +14,10 @@ static const char ntpServerName[] = "time.google.com";
 //Set Timezone
 const int timeZone = 1; //Central European Time
 //Set UP lights on GPIOs
-const int first_led = 16;
-const int second_led = 5;
-const int third_led = 4;
-const int fourth_led = 0;
+const int first_led = 16; //D0
+const int second_led = 5; //D1
+const int third_led = 4; //D2
+const int fourth_led = 0; //D3
 
 WiFiUDP Udp;
 unsigned int localPort = 8888;
@@ -123,7 +123,7 @@ int doy_calc(int year, int mon, int day)
             break;
     }
 
-    return doy; // return 0 to operating system
+    return doy; // return doy to operating system
 }
 // END CALC DOY
 
@@ -195,39 +195,39 @@ void loop() {
     Serial.println(second_advent_doy);
     Serial.println("1th Advent DOY: ");
     Serial.println(first_advent_doy);
-    Serial.println("ADOY:");
+    Serial.println("Actual DOY:");
     int actual_doy = doy_calc(jahr, monat, tag);
     Serial.println(actual_doy);
         if ((actual_doy >= first_advent_doy) && (actual_doy < second_advent_doy)) {
-            Serial.println("Nice1");
+            Serial.println("First Case");
             digitalWrite(first_led, HIGH);
             digitalWrite(second_led, LOW);
             digitalWrite(third_led, LOW);
             digitalWrite(fourth_led, LOW);
         }
         else if ((actual_doy >= second_advent_doy) && (actual_doy < three_advent_doy)) {
-            Serial.println("NICE2");
+            Serial.println("Second Case");
             digitalWrite(first_led, HIGH);
             digitalWrite(second_led, HIGH);
             digitalWrite(third_led, LOW);
             digitalWrite(fourth_led, LOW);
         }
         else if ((actual_doy >= three_advent_doy) && (actual_doy < fourth_advent_doy)) {
-            Serial.println("NICE3");
+            Serial.println("Thrid Case");
             digitalWrite(first_led, HIGH);
             digitalWrite(second_led, HIGH);
             digitalWrite(third_led, HIGH);
             digitalWrite(fourth_led, LOW);
         }
         else if (actual_doy >= fourth_advent_doy) {
-            Serial.println("NICE4");
+            Serial.println("Fourth Case");
             digitalWrite(first_led, HIGH);
             digitalWrite(second_led, HIGH);
             digitalWrite(third_led, HIGH);
             digitalWrite(fourth_led, HIGH);
         }
         else {
-            Serial.println("else");
+            Serial.println("No Case matched");
             digitalWrite(first_led, LOW);
             digitalWrite(second_led, LOW);
             digitalWrite(third_led, LOW);

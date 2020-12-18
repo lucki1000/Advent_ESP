@@ -6,14 +6,10 @@
 #include <string>
 
 using namespace std;
-//WiFi setup
 const char ssid[] = "SSID";
 const char pass[] = "WLAN KEY";
-//NTP Server
 static const char ntpServerName[] = "time.google.com";
-//Set Timezone
-const int timeZone = 1; //Central European Time
-//Set UP lights on GPIOs
+const int timeZone = 1; 
 const int first_led = 16;
 const int second_led = 5;
 const int third_led = 4;
@@ -22,20 +18,17 @@ const int fourth_led = 0;
 WiFiUDP Udp;
 unsigned int localPort = 8888;
 
-//call time
 time_t getNtpTime();
-void digitalClockDisplay();
 void printDigits(int digits);
 void sendNTPpacket(IPAddress &address);
 
-//Setup
 void setup() {
     Serial.begin(115200);
-    pinMode(first_led, OUTPUT); // set port to on
+    pinMode(first_led, OUTPUT); 
     pinMode(second_led, OUTPUT);
     pinMode(third_led, OUTPUT);
     pinMode(fourth_led, OUTPUT);
-    digitalWrite(first_led, LOW); // Turn off light
+    digitalWrite(first_led, LOW); 
     digitalWrite(second_led, LOW);
     digitalWrite(third_led, LOW);
     digitalWrite(fourth_led, LOW);
@@ -62,7 +55,7 @@ void setup() {
 }
 
 time_t prevDisplay = 0;
-//Calculate Weekday
+
 int day_of_week(int y, int m, int d)
 {
     static int t[] = {0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4};
@@ -70,18 +63,12 @@ int day_of_week(int y, int m, int d)
     return (y + y/4 - y/100 + y/400 + t[m-1] + d) % 7;
 }
 
-//Calc DOY
 int doy_calc(int year, int mon, int day)
 {
-    int /*day, mon, year,*/ days_in_feb = 28, doy;    // day of year
-
-    //printf("Enter date (MM/DD/YYYY): ");
-    //scanf("%d %d %d", &mon, &day, &year);
-    //day = 24, mon = 12, year = 2022;
+    int days_in_feb = 28, doy; 
     doy = day;
-
-    // check for leap year
-    if( (year % 4 == 0 && year % 100 != 0 ) || (year % 400 == 0) )
+    
+	if( (year % 4 == 0 && year % 100 != 0 ) || (year % 400 == 0) )
     {
         days_in_feb = 29;
     }
@@ -123,9 +110,8 @@ int doy_calc(int year, int mon, int day)
             break;
     }
 
-    return doy; // return 0 to operating system
+    return doy;
 }
-// END CALC DOY
 
 int calc_4th_advent(string silent) {
     int advent_4th;
@@ -153,7 +139,6 @@ void loop() {
     }
     string silent;
     int y, m, d;
-    //use the 24.12 to calc the 4 Advent
     d = 24;
     m = 12;
     y = year();
@@ -185,68 +170,53 @@ void loop() {
     int monat = month();
     int jahr = year();
     int fourth_advent = calc_4th_advent(silent);
-    int fourth_advent_doy = doy_calc(jahr, 12, fourth_advent); //2020 it should be 355
+    int fourth_advent_doy = doy_calc(jahr, 12, fourth_advent); 
     int three_advent_doy = fourth_advent_doy - 7, second_advent_doy = three_advent_doy - 7, first_advent_doy = second_advent_doy - 7;
-    Serial.println("4th Advent DOY: ");
-    Serial.println(fourth_advent_doy);
-    Serial.println("3th Advent DOY: ");
-    Serial.println(three_advent_doy);
-    Serial.println("2th Advent DOY: ");
-    Serial.println(second_advent_doy);
-    Serial.println("1th Advent DOY: ");
-    Serial.println(first_advent_doy);
-    Serial.println("ADOY:");
     int actual_doy = doy_calc(jahr, monat, tag);
-    Serial.println(actual_doy);
         if ((actual_doy >= first_advent_doy) && (actual_doy < second_advent_doy)) {
-            Serial.println("Nice1");
             digitalWrite(first_led, HIGH);
             digitalWrite(second_led, LOW);
             digitalWrite(third_led, LOW);
             digitalWrite(fourth_led, LOW);
         }
         else if ((actual_doy >= second_advent_doy) && (actual_doy < three_advent_doy)) {
-            Serial.println("NICE2");
             digitalWrite(first_led, HIGH);
             digitalWrite(second_led, HIGH);
             digitalWrite(third_led, LOW);
             digitalWrite(fourth_led, LOW);
         }
         else if ((actual_doy >= three_advent_doy) && (actual_doy < fourth_advent_doy)) {
-            Serial.println("NICE3");
             digitalWrite(first_led, HIGH);
             digitalWrite(second_led, HIGH);
             digitalWrite(third_led, HIGH);
             digitalWrite(fourth_led, LOW);
         }
         else if (actual_doy >= fourth_advent_doy) {
-            Serial.println("NICE4");
             digitalWrite(first_led, HIGH);
             digitalWrite(second_led, HIGH);
             digitalWrite(third_led, HIGH);
             digitalWrite(fourth_led, HIGH);
         }
         else {
-            Serial.println("else");
             digitalWrite(first_led, LOW);
             digitalWrite(second_led, LOW);
             digitalWrite(third_led, LOW);
             digitalWrite(fourth_led, LOW);
         }
+
     delay(40000);
     void printDigits(int digits);
     void sendNTPpacket(IPAddress &address);
-    //Setup
 }
-const int NTP_PACKET_SIZE = 48; // NTP time is in the first 48 bytes of message
-byte packetBuffer[NTP_PACKET_SIZE]; //buffer to hold incoming & outgoing packets
+
+const int NTP_PACKET_SIZE = 48; 
+byte packetBuffer[NTP_PACKET_SIZE];
 
 time_t getNtpTime() {
-    IPAddress ntpServerIP; // NTP server's ip address
+    IPAddress ntpServerIP; 
 
-    while (Udp.parsePacket() > 0); // discard any previously received packets
+    while (Udp.parsePacket() > 0); 
     Serial.println("Transmit NTP Request");
-    // get a random server from the pool
     WiFi.hostByName(ntpServerName, ntpServerIP);
     Serial.print(ntpServerName);
     Serial.print(": ");
@@ -257,9 +227,8 @@ time_t getNtpTime() {
         int size = Udp.parsePacket();
         if (size >= NTP_PACKET_SIZE) {
             Serial.println("Receive NTP Response");
-            Udp.read(packetBuffer, NTP_PACKET_SIZE);  // read packet into the buffer
+            Udp.read(packetBuffer, NTP_PACKET_SIZE); 
             unsigned long secsSince1900;
-            // convert four bytes starting at location 40 to a long integer
             secsSince1900 = (unsigned long) packetBuffer[40] << 24;
             secsSince1900 |= (unsigned long) packetBuffer[41] << 16;
             secsSince1900 |= (unsigned long) packetBuffer[42] << 8;
@@ -268,25 +237,19 @@ time_t getNtpTime() {
         }
     }
     Serial.println("No NTP Response :-(");
-    return 0; // return 0 if unable to get the time
+    return 0; 
 }
 void sendNTPpacket(IPAddress &address) {
-    // set all bytes in the buffer to 0
     memset(packetBuffer, 0, NTP_PACKET_SIZE);
-    // Initialize values needed to form NTP request
-    // (see URL above for details on the packets)
-    packetBuffer[0] = 0b11100011;   // LI, Version, Mode
-    packetBuffer[1] = 0;     // Stratum, or type of clock
-    packetBuffer[2] = 6;     // Polling Interval
-    packetBuffer[3] = 0xEC;  // Peer Clock Precision
-    // 8 bytes of zero for Root Delay & Root Dispersion
+    packetBuffer[0] = 0b11100011;  
+    packetBuffer[1] = 0;   
+    packetBuffer[2] = 6;    
+    packetBuffer[3] = 0xEC;  
     packetBuffer[12] = 49;
     packetBuffer[13] = 0x4E;
     packetBuffer[14] = 49;
     packetBuffer[15] = 52;
-    // all NTP fields have been given values, now
-    // you can send a packet requesting a timestamp:
-    Udp.beginPacket(address, 123); //NTP requests are to port 123
+    Udp.beginPacket(address, 123); 
     Udp.write(packetBuffer, NTP_PACKET_SIZE);
     Udp.endPacket();
 }
