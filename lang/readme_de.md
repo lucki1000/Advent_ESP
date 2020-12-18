@@ -6,7 +6,7 @@
 </p>
 
 # Inhalt:
-- [Warum dieses Projekt?](#whatsthis)
+- [Wofür ist dieses Projekt?](#whatsthis)
 - [Wie benutze ich das?](#howtouseit)
   - [Was du ändern musst](#changes)
   - [Kompilieren und Flashen](#compileandflash)
@@ -35,7 +35,7 @@ Wenn du das nicht machst sucht das Programm nach dem WLan und zeigt dir für jed
 Wenn du den NTP Server ändern willst odere die Zeitzone, dann ändere das dort:
 ```
 //NTP Server
-static const char ntpServerName[] = "time.google.de";
+static const char ntpServerName[] = "time.google.com";
 //Set Timezone
 const int timeZone = 1; //Central European Time
 ```

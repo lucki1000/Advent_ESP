@@ -1,6 +1,6 @@
 # IOT LED Advent Wreath
 
-This program is a dynamic Advent Wreath it checks the Google Time Server for the actual day, month and year. With this inforamation it calcs all advent days in the actual year.  
+This program is a dynamic Advent Wreath it checks the Google Time Server for the actual day, month and year. With this inforamation it calcs all advent days in the actual year, and power on for any advent a led.
 
 <p align="center">
   <span>English</span> |
@@ -8,7 +8,7 @@ This program is a dynamic Advent Wreath it checks the Google Time Server for the
 </p>
 
 # Content:
-- [What's this Project?](#whatsthis)
+- [What is this Project for?](#whatsthis)
 - [How to use it?](#howtouseit)
   - [What you need to change](#changes)
   - [Compiling and Flash to ESP](#compileandflash)
@@ -36,7 +36,7 @@ cause otherwise it hangs in a while loop and print "." into the serial monitor, 
 If you would like to change the NTP Server or the Timezone you have to change this lines:
 ```
 //NTP Server
-static const char ntpServerName[] = "time.google.de";
+static const char ntpServerName[] = "time.google.com";
 //Set Timezone
 const int timeZone = 1; //Central European Time
 ```
